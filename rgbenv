@@ -14,22 +14,19 @@ RGBDS_PREFIX="rgbds-"
 # --------------- Var defines -------------------------------------------------
 
 # Set up XDG standard directories (Linux, etc.)
-RGBENV_CONFIG=${XDG_CONFIG_HOME:-~/.config}/rgbenv
-RGBENV_CACHE=${XDG_CACHE_HOME:-~/.cache}/rgbenv
+RGBENV_DEFAULT=${XDG_DATA_HOME:-~/.local/share}/rgbenv/default
+RGBENV_VERSIONS=${XDG_DATA_HOME:-~/.local/share}/rgbenv/versions
 
-if [[ ! -d ${XDG_CONFIG_HOME:-~/.config} ]]; then
-	RGBENV_CONFIG=~/.rgbenv/config
-fi
-
-if [[ ! -d ${XDG_CACHE_HOME:-~/.cache} ]]; then
-	RGBENV_CACHE=~/.rgbenv/versions
+if [[ ! -d ${XDG_DATA_HOME:-~/.local/share} ]]; then
+	RGBENV_DEFAULT=~/.rgbenv/default
+	RGBENV_VERSIONS=~/.rgbenv/versions
 fi
 
 RGBDS_PREFIX_LEN=${#RGBDS_PREFIX}
 
 # available offline
-if [ -d $RGBENV_CACHE ]; then
-	AVAILABLE_VERSIONS=$(find $RGBENV_CACHE -maxdepth 1 -type d -regex ".*$RGBDS_PREFIX[0-9]+.[0-9]+.[0-9]+\(-[a-zA-Z0-9_]+\)?" -printf "%f\n")
+if [ -d $RGBENV_VERSIONS ]; then
+	AVAILABLE_VERSIONS=$(find $RGBENV_VERSIONS -maxdepth 1 -type d -regex ".*$RGBDS_PREFIX[0-9]+.[0-9]+.[0-9]+\(-[a-zA-Z0-9_]+\)?" -printf "%f\n")
 else
 	AVAILABLE_VERSIONS=''
 fi
@@ -42,7 +39,7 @@ check_online_versions () {
 }
 
 help () {
-	echo "rgbenv v0.0.2 - manage RGBDS versions"
+	echo "rgbenv v0.1.0 - manage RGBDS versions"
 	echo
 	echo "Usage: rgbenv [use|exec|install|available] [options] [args]"
 	echo
@@ -90,8 +87,8 @@ setup () {
 	local has_choice=0
 	echo "rgbenv has not been set up yet."
 	echo "The following operations will be done:"
-	echo "    Create config dir                  -> $RGBENV_CONFIG"
-	echo "    Create source and binary cache dir -> $RGBENV_CACHE"
+	echo "    Create rgbenv defaults dir     -> $RGBENV_DEFAULT"
+	echo "    Create source and binaries dir -> $RGBENV_VERSIONS"
 	echo
 	while [ $has_choice -eq 0 ]; do
 		read -p "Would you like to do that now? [y/n] " choice
@@ -104,8 +101,8 @@ setup () {
 }
 
 make_dirs () {
-	mkdir -p $RGBENV_CONFIG
-	mkdir -p $RGBENV_CACHE
+	mkdir -p $RGBENV_DEFAULT
+	mkdir -p $RGBENV_VERSIONS
 }
 
 show_install_instructions () {
@@ -167,48 +164,49 @@ _available () {
 
 _use () {
 	if [ -z $1 ]; then
-		if [ -f $RGBENV_CONFIG/version ]; then
-			cat $RGBENV_CONFIG/version
+		if [ -f $RGBENV_DEFAULT/version ]; then
+			cat $RGBENV_DEFAULT/version
 		else
 			echo "Use which version?"
 			point_to_available_command
 		fi
 	else
-	checkver $1;
-	# check if we have a working build of RGBASM (at the very least)
-	if [ -x $RGBENV_CACHE/$RGBDS_PREFIX$1/rgbasm ]; then
-		# create symlinks to the proper RGBDS version
-		mkdir -p $RGBENV_CONFIG/bin
-		
-		echo "Making symlinks..."
-		for i in rgbasm rgblink rgbfix rgbgfx; do
-			ln -sfv $RGBENV_CACHE/$RGBDS_PREFIX$1/$i $RGBENV_CONFIG/bin/$i
-		done
-		echo
-		
-		echo $1 > $RGBENV_CONFIG/version
-		
-		echo "The default RGBDS has been set to $1."
-		echo "To use it, ensure that the following is in your ~/.bash_profile"
-		echo "and/or ~/.bashrc:"
-		echo
-		echo "export PATH=\"$RGBENV_CONFIG/bin:\$PATH\""
-		echo
-		echo "Once that's done, verify with rgbasm -V."
-	else
-		echo "Version $1 has not been installed yet."
-		show_install_instructions $1
-		point_to_available_command
-	fi
+		checkver $1;
+		# check if we have a working build of RGBASM (at the very least)
+		if [ -x $RGBENV_VERSIONS/$RGBDS_PREFIX$1/rgbasm ]; then
+			# create symlinks to the proper RGBDS version
+			mkdir -p $RGBENV_DEFAULT/bin
+			
+			echo "Making symlinks..."
+			for i in rgbasm rgblink rgbfix rgbgfx; do
+				ln -sfv $RGBENV_VERSIONS/$RGBDS_PREFIX$1/$i $RGBENV_DEFAULT/bin/$i
+			done
+			echo
+			
+			echo $1 > $RGBENV_DEFAULT/version
+			
+			echo "The default RGBDS has been set to $1."
+			if [[ ":$PATH:" != *":$RGBENV_DEFAULT/bin:"* ]]; then
+				echo "To use it, ensure that the following is in your shell configuration:"
+				echo
+				echo "export PATH=\"$RGBENV_DEFAULT/bin:\$PATH\""
+				echo
+				echo "Once that's done, verify with rgbasm -V."
+			fi
+		else
+			echo "Version $1 has not been installed yet."
+			show_install_instructions $1
+			point_to_available_command
+		fi
 	fi
 }
 
 _no_use () {
-	if [ -f $RGBENV_CONFIG/version ]; then
-		rm $RGBENV_CONFIG/version
+	if [ -f $RGBENV_DEFAULT/version ]; then
+		rm $RGBENV_DEFAULT/version
 	fi
-	if [ -d $RGBENV_CONFIG/bin ]; then
-		rm -r $RGBENV_CONFIG/bin
+	if [ -d $RGBENV_DEFAULT/bin ]; then
+		rm -r $RGBENV_DEFAULT/bin
 	fi
 	echo "Symlinks and version configuration deleted."
 	echo "RGBDS is now managed by the system."
@@ -247,11 +245,11 @@ _install () {
 	
 	# if so, download the tarball and extract it
 	echo "Downloading from $download_link..."
-	curl $download_link | tar -xz --directory $RGBENV_CACHE
+	curl $download_link | tar -xz --directory $RGBENV_VERSIONS
 	
 	# then build it
 	echo "Building RGBDS $version..."
-	cd $RGBENV_CACHE/$RGBDS_PREFIX$version
+	cd $RGBENV_VERSIONS/$RGBDS_PREFIX$version
 	if make; then
 		echo "Build successful."
 		echo
@@ -271,12 +269,12 @@ _uninstall () {
 		point_to_available_command
 	else
 		checkver $version
-		if [ -d $RGBENV_CACHE/$RGBDS_PREFIX$version ]; then
-			rm -r $RGBENV_CACHE/$RGBDS_PREFIX$version
+		if [ -d $RGBENV_VERSIONS/$RGBDS_PREFIX$version ]; then
+			rm -r $RGBENV_VERSIONS/$RGBDS_PREFIX$version
 			
-			if [ $(cat $RGBENV_CONFIG/version) = $version ]; then
-				rm $RGBENV_CONFIG/version
-				rm $RGBENV_CONFIG/bin/*
+			if [ $(cat $RGBENV_DEFAULT/version) = $version ]; then
+				rm $RGBENV_DEFAULT/version
+				rm $RGBENV_DEFAULT/bin/*
 				echo "Removed current RGBDS version, RGBDS is now system-managed"
 			fi
 			echo "Version $1 uninstalled."
@@ -290,11 +288,11 @@ _exec () {
 		shift
 		local version=$1
 		checkver $version
-		if [ -x $RGBENV_CACHE/$RGBDS_PREFIX$version/rgbasm ]; then
+		if [ -x $RGBENV_VERSIONS/$RGBDS_PREFIX$version/rgbasm ]; then
 			shift
 			if [ ${#@} -gt 0 ]; then
 				echo "Executing with RGBDS version $version."
-				env PATH="$RGBENV_CACHE/$RGBDS_PREFIX$version:$PATH" $@
+				env PATH="$RGBENV_VERSIONS/$RGBDS_PREFIX$version:$PATH" $@
 			fi
 		else
 			echo "Version $version is not installed."
@@ -305,10 +303,10 @@ _exec () {
 	elif [ -f .rgbds-version ]; then
 		local version=$(cat .rgbds-version | tr -d " \t\n\r")
 		checkver $version
-		if [ -x $RGBENV_CACHE/$RGBDS_PREFIX$version/rgbasm ]; then
+		if [ -x $RGBENV_VERSIONS/$RGBDS_PREFIX$version/rgbasm ]; then
 			if [ ${#@} -gt 0 ]; then
 				echo "Executing with RGBDS version $version."
-				env PATH="$RGBENV_CACHE/$RGBDS_PREFIX$version:$PATH" $@
+				env PATH="$RGBENV_VERSIONS/$RGBDS_PREFIX$version:$PATH" $@
 			fi
 		else
 			echo "Version $version is not installed."
@@ -319,15 +317,15 @@ _exec () {
 	else
 		# when PATH is set properly, this would pretty much be useless
 		# This *does* have a use if it isn't though
-		if [ -f $RGBENV_CONFIG/version ]; then
-			version=$(cat $RGBENV_CONFIG/version)
-			if [ ! -x $RGBENV_CACHE/$RGBDS_PREFIX$version/rgbasm ]; then
+		if [ -f $RGBENV_DEFAULT/version ]; then
+			version=$(cat $RGBENV_DEFAULT/version)
+			if [ ! -x $RGBENV_VERSIONS/$RGBDS_PREFIX$version/rgbasm ]; then
 				echo "Version not set."
 				point_to_use
 				exit 1
 			else
 				if [ ${#@} -gt 0 ]; then
-					env PATH="$RGBENV_CACHE/$RGBDS_PREFIX$version:$PATH" $@
+					env PATH="$RGBENV_VERSIONS/$RGBDS_PREFIX$version:$PATH" $@
 				fi
 			fi
 		else
@@ -341,7 +339,7 @@ _exec () {
 # --------------- Entry point -------------------------------------------------
 
 # Perform setup
-if [ ! -d $RGBENV_CONFIG ]; then
+if [ ! -d $RGBENV_DEFAULT ]; then
 	setup
 fi
 
