@@ -47,7 +47,7 @@ You can use these commands to get them:
 
 <ol>
 <li>Install whatever dependencies it needs, through the above section.</li>
-<li>Download the rgbenv script, and place it in <code>/usr/local/bin/</code> (or any directory listed when you run <code>echo $PATH</code>)</li>
+<li>Download the rgbenv script, and place it in <code>/usr/local/bin/</code> (or any directory listed when you run <code>echo $PATH</code>) The fastest way is through: <pre><code># sudo sh -c "curl https://raw.githubusercontent.com/ZoomTen/rgbenv/master/rgbenv > /usr/local/bin/rgbenv"</code></pre></li>
 <li>Ensure the script is executable: <pre><code># chmod +x /usr/local/bin/rgbenv
 </code></pre>(replace <code>/usr/local/bin/rgbenv</code> with where you put the rgbenv script)</li>
 <li>Install the version you want, say 0.6.0:<pre><code>$ rgbenv install 0.6.0
