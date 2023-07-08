@@ -163,21 +163,21 @@ show_install_instructions () {
 	echo "    rgbenv install $1"
 }
 point_to_available_command () {
-		echo
-		echo "To see available versions:"
-		echo "    rgbenv available"
+	echo
+	echo "To see available versions:"
+	echo "    rgbenv available"
 }
 
 point_to_available_online () {
-		echo
-		echo "Check for installable versions by:"
-		echo "    rgbenv available --online"
+	echo
+	echo "Check for installable versions by:"
+	echo "    rgbenv available --online"
 }
 
 point_to_use () {
-		echo
-		echo "Select a version to use with:"
-		echo "    rgbenv use <version>"
+	echo
+	echo "Select a version to use with:"
+	echo "    rgbenv use <version>"
 }
 
 # --------------- Subcommands -----------------------------------------
