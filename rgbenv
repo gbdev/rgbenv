@@ -22,9 +22,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-set -e
-shopt -u nullglob
-
 # --------------- Variables -------------------------------------------------
 
 RGBDS_GIT="https://github.com/gbdev/rgbds"
@@ -48,7 +45,7 @@ RGBDS_PREFIX_LEN=${#RGBDS_PREFIX}
 
 # available offline
 if [ -d $RGBENV_VERSIONS ]; then
-	AVAILABLE_VERSIONS=$(find $RGBENV_VERSIONS -maxdepth 1 -type d -regex ".*$RGBDS_PREFIX[0-9]+.[0-9]+.[0-9]+\(-[a-zA-Z0-9_]+\)?" -printf "%f\n")
+	AVAILABLE_VERSIONS=$(find $RGBENV_VERSIONS -maxdepth 1 -type d | grep -Eo "$RGBDS_PREFIX[0-9]+.[0-9]+.[0-9]+(-[a-zA-Z0-9_]+)?")
 else
 	AVAILABLE_VERSIONS=''
 fi
@@ -57,7 +54,7 @@ fi
 
 check_online_versions () {
 	# set the relevant variable
-	ONLINE_VERSIONS=$(git ls-remote --tags $RGBDS_GIT | grep -Po "\d+\.\d+\.\d+(-[A-Za-z0-9_]+)?$")
+	ONLINE_VERSIONS=$(git ls-remote --tags $RGBDS_GIT | grep -Eo "[0-9]+.[0-9]+.[0-9]+(-[A-Za-z0-9_]+)?$")
 }
 
 help () {
@@ -234,7 +231,7 @@ _use () {
 			
 			echo "Making symlinks..."
 			for i in rgbasm rgblink rgbfix rgbgfx; do
-				ln -sfv $RGBENV_VERSIONS/$RGBDS_PREFIX$1/$i $RGBENV_DEFAULT/bin/$i
+				ln -sf $RGBENV_VERSIONS/$RGBDS_PREFIX$1/$i $RGBENV_DEFAULT/bin/$i
 			done
 			echo
 			
@@ -302,8 +299,9 @@ _install () {
 	echo "Downloading from $download_link..."
 	tempfile=$(mktemp)
 	curl -L $download_link > $tempfile
-	dirname=$(tar -tzf $tempfile | head -1 | cut -f1 -d'/')
-	tar -xzf $tempfile --directory $RGBENV_VERSIONS
+	dirname=$(tar tzf $tempfile | head -1 | cut -f1 -d'/')
+	cd $RGBENV_VERSIONS
+	tar xzf $tempfile
 	mv $RGBENV_VERSIONS/$dirname $RGBENV_VERSIONS/$RGBDS_PREFIX$version
 	rm $tempfile
 	
