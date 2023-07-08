@@ -58,7 +58,7 @@ check_online_versions () {
 }
 
 help () {
-	echo "rgbenv v0.1.2 - manage RGBDS versions"
+	echo "rgbenv v0.1.3 - manage RGBDS versions"
 	echo
 	echo "Usage: rgbenv [use|exec|install|available] [options] [args]"
 	echo
