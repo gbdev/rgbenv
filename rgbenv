@@ -63,12 +63,12 @@ help () {
 	echo "Usage: rgbenv [use|exec|install|available] [options] [args]"
 	echo
 	echo "    use [version]?"
-	echo "        Set or view the RGBDS version for"
-	echo "        the currently-running shell."
+	echo "        Set or view the default RGBDS version for"
+	echo "        the current user."
 	echo
 	echo "    no-use"
-	echo "        Clear the RGBDS version and let the"
-	echo "        system PATH manage it."
+	echo "        Clear the user default RGBDS version and let"
+	echo "        the system PATH manage it."
 	echo
 	echo "    exec [-v/--version version]? [program, arg1, arg2, ...]"
 	echo "        Run commands using a specific version"
@@ -243,7 +243,8 @@ _use () {
 				echo
 				echo "export PATH=\"$RGBENV_DEFAULT/bin:\$PATH\""
 				echo
-				echo "Once that's done, verify with rgbasm -V."
+				echo "Once that's done, restart your shell and"
+				echo "verify with rgbasm -V."
 			fi
 		else
 			echo "Version $1 has not been installed yet."
