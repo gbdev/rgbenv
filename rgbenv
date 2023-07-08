@@ -113,7 +113,7 @@ checkverinstall () {
 		while [ $has_choice -eq 0 ]; do
 			read -p "Version $version is already installed. Do you want to reinstall? [y/n] " choice
 			case $choice in
-				[Yy]* ) has_choice=1; break;;
+				[Yy]* ) has_choice=1; rm -r $RGBENV_VERSIONS/$RGBDS_PREFIX$version; break;;
 				[Nn]* ) exit; break;;
 				* ) echo "Please answer y or n.";;
 			esac
