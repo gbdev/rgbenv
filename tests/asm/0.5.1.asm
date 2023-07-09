@@ -1,0 +1,5 @@
+MAJOR EQU 0
+MINOR EQU 5
+PATCH EQU 1
+
+INCLUDE "_check_common.asm"
