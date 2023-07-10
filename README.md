@@ -35,7 +35,7 @@ $ which rgbasm
       * [Cygwin](https://cygwin.com/)
 * git
 * curl
-* RGBDS [build dependencies](https://rgbds.gbdev.io/install/#building-from-source)
+* [RGBDS build dependencies](https://rgbds.gbdev.io/install/source/#2-build)
 
 You can use these commands to get them:
 <ul>
