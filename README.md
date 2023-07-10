@@ -39,9 +39,9 @@ You can use these commands to get them:
 <li>Debian: <pre><code># apt update
 # apt install libpng-dev pkg-config build-essential bison git curl
 </code></pre></li>
-<li>Alpine Linux: <pre><code># apk add findutils coreutils grep git curl make pkgconfig gcc libc-dev libpng-dev bison
+<li>Alpine Linux: <pre><code># apk add git curl make libpng-dev bison gcc g++ libc-dev
 </code></pre></li>
-<li>OpenBSD: <pre><code># pkg_add png findutils git bash curl bison
+<li>OpenBSD: <pre><code># pkg_add png git bash curl bison
 </code></pre>In case something goes wrong, try compiling with GCC:<pre><code># pkg_add g++ gcc
 $ CC=egcc CXX=eg++ rgbenv install $YOUR_DESIRED_VERSION</code></pre></li>
 </ul>
