@@ -27,9 +27,12 @@ $ which rgbasm
 
 ## What do I need?
 
-* A Unix-like environment with GNU coreutils
+* A Unix-like environment
     * Linux or BSD preferable
-    * On Windows, you may use [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) with a distro of choice or MSYS2 (Cygwin may work?)
+    * On Windows, you may use either:
+      * [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) with a distro of choice
+      * [MSYS2](https://www.msys2.org/)
+      * [Cygwin](https://cygwin.com/)
 * git
 * curl
 * RGBDS [build dependencies](https://rgbds.gbdev.io/install/#building-from-source)
@@ -44,6 +47,16 @@ You can use these commands to get them:
 <li>OpenBSD: <pre><code># pkg_add png git bash curl bison
 </code></pre>In case something goes wrong, try compiling with GCC:<pre><code># pkg_add g++ gcc
 $ CC=egcc CXX=eg++ rgbenv install $YOUR_DESIRED_VERSION</code></pre></li>
+<li>Windows MSYS2 (MinGW64): <pre><code>$ pacman -S git make bison pkgconf mingw-w64-x86_64-gcc mingw-w64-x86_64-libpng
+</code></pre>If you're using another environment with MSYS2, replace <code>mingw-w64-x86_64</code> with the corresponding name. You may need to do <code>mkdir -p /usr/local/bin</code> first.</li>
+<li>Windows Cygwin: From the setup program, select the latest versions of these packages:<ul>
+<li>git</li>
+<li>gcc-g++</li>
+<li>libpng-devel</li>
+<li>pkgconf</li>
+<li>bison</li>
+<li>make</li>
+</ul></li>
 </ul>
 
 ## How do I set it up?
