@@ -1,6 +1,6 @@
 # rgbenv
 
-This is a version manager for [RGBDS](https://github.com/gbdev/rgbds) that's a pure shell script.* Inspired by [pyenv](https://github.com/pyenv/pyenv) and [rbenv](https://github.com/rbenv/rbenv), it lets you easily switch between multiple versions of the RGBDS suite to suit different projects.
+This is a version manager for [RGBDS](https://github.com/gbdev/rgbds). It is a pure shell script.* Inspired by [pyenv](https://github.com/pyenv/pyenv) and [rbenv](https://github.com/rbenv/rbenv), it lets you easily switch between multiple versions of the RGBDS suite to suit different projects.
 
 \* Bash script, at the moment. Compatibility with other shells is not guaranteed.
 
@@ -45,7 +45,7 @@ You can use these commands to get them:
 <li>Alpine Linux: <pre><code># apk add git curl make libpng-dev bison gcc g++ libc-dev
 </code></pre></li>
 <li>OpenBSD: <pre><code># pkg_add png git bash curl bison
-</code></pre>In case something goes wrong, try compiling with GCC:<pre><code># pkg_add g++ gcc
+</code></pre>In case something goes wrong, try using GCC as the compiler:<pre><code># pkg_add g++ gcc
 $ CC=egcc CXX=eg++ rgbenv install $YOUR_DESIRED_VERSION</code></pre></li>
 <li>Windows MSYS2 (MinGW64): <pre><code>$ pacman -S git make bison pkgconf mingw-w64-x86_64-gcc mingw-w64-x86_64-libpng
 </code></pre>If you're using another environment with MSYS2, replace <code>mingw-w64-x86_64</code> with the corresponding name. You may need to do <code>mkdir -p /usr/local/bin</code> first.</li>
@@ -85,7 +85,22 @@ $ cat .rgbds-version
 ```
 
 ## Quick commands
+
 * `rgbenv use 0.5.1` - set default RGBDS version to 0.5.1
 * `rgbenv no-use` - clear the defaults and use the system-provided RGBDS, if any
 * `rgbenv exec -v 0.4.2 make` - run `make` using RGBDS 0.4.2
 * `rgbenv exec make` - run `make` with the project-specified RGBDS version.
+
+## Development
+
+At the moment, rgbenv is hosted on GitHub.
+
+To run the unit tests on your own machine, clone the rgbenv repo (instead of just downloading the script as above), and then run `make test`:
+
+```
+$ git clone https://github.com/gbdev/rgbenv
+$ cd rgbenv
+$ make test
+```
+
+As the unit tests use [Bats](https://github.com/bats-core/bats-core), the Bats repo will be cloned automatically inside the rgbenv directory if it is not present, and then Bats will be run from there.
