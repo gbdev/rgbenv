@@ -21,7 +21,7 @@ jobs:
       - name: Checkout rgbenv
         uses: actions/checkout@v2
         with:
-          path: virens
+          path: rgbenv
             
       - name: Run tests
         run: make test
