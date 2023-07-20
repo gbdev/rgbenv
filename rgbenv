@@ -45,7 +45,7 @@ RGBDS_PREFIX_LEN=${#RGBDS_PREFIX}
 
 # available offline
 if [ -d $RGBENV_VERSIONS ]; then
-	AVAILABLE_VERSIONS=$(find $RGBENV_VERSIONS -maxdepth 1 -type d | grep -Eo "$RGBDS_PREFIX[0-9]+.[0-9]+.[0-9]+(-[a-zA-Z0-9_]+)?")
+	AVAILABLE_VERSIONS=$(find $RGBENV_VERSIONS -maxdepth 1 -type d | grep -Eo "${RGBDS_PREFIX}[0-9]+.[0-9]+.[0-9]+(-[a-zA-Z0-9_]+)?")
 else
 	AVAILABLE_VERSIONS=''
 fi
@@ -353,7 +353,7 @@ _exec () {
 			shift
 			if [ ${#@} -gt 0 ]; then
 				echo "Executing with RGBDS version $version."
-				env PATH="$RGBENV_VERSIONS/$RGBDS_PREFIX$version:$PATH" $@
+				env PATH="$RGBENV_VERSIONS/$RGBDS_PREFIX$version:$PATH" "$@"
 			fi
 		else
 			echo "Version $version is not installed."
@@ -367,7 +367,7 @@ _exec () {
 		if [ -x $RGBENV_VERSIONS/$RGBDS_PREFIX$version/rgbasm ]; then
 			if [ ${#@} -gt 0 ]; then
 				echo "Executing with RGBDS version $version."
-				env PATH="$RGBENV_VERSIONS/$RGBDS_PREFIX$version:$PATH" $@
+				env PATH="$RGBENV_VERSIONS/$RGBDS_PREFIX$version:$PATH" "$@"
 			fi
 		else
 			echo "Version $version is not installed."
@@ -386,7 +386,7 @@ _exec () {
 				exit 1
 			else
 				if [ ${#@} -gt 0 ]; then
-					env PATH="$RGBENV_VERSIONS/$RGBDS_PREFIX$version:$PATH" $@
+					env PATH="$RGBENV_VERSIONS/$RGBDS_PREFIX$version:$PATH" "$@"
 				fi
 			fi
 		else
@@ -410,7 +410,7 @@ case $1 in
 	no-use* ) shift; _no_use $1;;
 	install* ) shift; _install $1;;
 	uninstall* ) shift; _uninstall $1;;
-	exec* ) shift; _exec $@;;
+	exec* ) shift; _exec "$@";;
 	available* ) shift; _available $1;;
 	remove*) shift; _remove;;
 	*) if [ ! -z "$1" ]; then echo -e "Unknown command $1.\n"; fi; help;;
