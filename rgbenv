@@ -33,13 +33,15 @@ RGBDS_PREFIX="rgbds-"
 # --------------- Var defines -------------------------------------------------
 
 # Set up XDG standard directories (Linux, etc.)
-RGBENV_DEFAULT=${XDG_DATA_HOME:-$HOME/.local/share}/rgbenv/default
-RGBENV_VERSIONS=${XDG_DATA_HOME:-$HOME/.local/share}/rgbenv/versions
+RGBENV_ROOT_SUFFIX="rgbenv"
 
-if [[ ! -d ${XDG_DATA_HOME:-$HOME/.local/share} ]]; then
-	RGBENV_DEFAULT=$HOME/.rgbenv/default
-	RGBENV_VERSIONS=$HOME/.rgbenv/versions
+RGBENV_ROOT="${XDG_DATA_HOME:-$HOME/.local/share}/$RGBENV_ROOT_SUFFIX"
+if [[ ! -d "${XDG_DATA_HOME:-$HOME/.local/share}" ]]; then
+	RGBENV_ROOT="$HOME/.$RGBENV_ROOT_SUFFIX"
 fi
+
+RGBENV_DEFAULT="$RGBENV_ROOT/default"
+RGBENV_VERSIONS="$RGBENV_ROOT/versions"
 
 RGBDS_PREFIX_LEN=${#RGBDS_PREFIX}
 
@@ -131,6 +133,27 @@ _remove () {
 			* ) echo "Please answer y or n.";;
 		esac
 	done
+}
+
+offer_to_move () {
+	local has_choice=0
+	echo "XDG_DATA_HOME defined, but there's an existing rgbenv"
+	echo "installation at $HOME/.$RGBENV_ROOT_SUFFIX."
+	echo "Moving the existing installation seems like a good idea:"
+	echo "    $HOME/.$RGBENV_ROOT_SUFFIX -> $RGBENV_ROOT"
+	echo
+	while [ $has_choice -eq 0 ]; do
+		read -p "Would you like to move these directories? [y/n] " choice
+		case $choice in
+			[Yy]* ) move_dirs; has_choice=1; break;;
+			[Nn]* ) has_choice=1; exit;;
+			* ) echo "Please answer y or n.";;
+		esac
+	done
+}
+
+move_dirs () {
+	mv "$HOME/.$RGBENV_ROOT_SUFFIX" "$RGBENV_ROOT"
 }
 
 setup () {
@@ -398,7 +421,11 @@ _exec () {
 
 # Perform setup
 if [ ! -d $RGBENV_DEFAULT ]; then
-	setup
+	if [ -d "$HOME/.$RGBENV_ROOT_SUFFIX" ]; then
+		offer_to_move
+	else
+		setup
+	fi
 fi
 
 # Main program
