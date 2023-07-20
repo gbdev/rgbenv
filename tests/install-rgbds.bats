@@ -3,25 +3,13 @@
 load _helper
 
 setup_file() {
-	DIR="$( cd "$( dirname "$BATS_TEST_FILENAME" )" >/dev/null 2>&1 && pwd )"
-	export RGBENV_TEST_DIR="$BATS_TMPDIR/rgbenv"
-	mkdir -p $RGBENV_TEST_DIR
-	export PATH="$DIR/..:$PATH"
-# -------- added code --------
-	export RGBENV_VERSION_CACHE="$RGBENV_TEST_DIR/_version_cache"
-	mkdir $RGBENV_VERSION_CACHE
-	export RGBENV_TESTS_ROOT=$DIR
+	setup_file_common
+	setup_file_version_cache
 }
 
 setup() {
-	export HOME=$(mktemp -d "$RGBENV_TEST_DIR/XXXXXX")
-# -------- added code --------
-	export XDG_DATA_HOME=""
-	export RGBENV_TEST_VERSIONS=$HOME/.rgbenv/versions
-	export RGBENV_TEST_DEFAULT=$HOME/.rgbenv/default
-	mkdir -p $RGBENV_TEST_VERSIONS
-	mkdir -p $RGBENV_TEST_DEFAULT/bin
-	export PATH=$RGBENV_TEST_DEFAULT/bin:$PATH
+	setup_common
+	setup_make_rgbenv
 }
 
 get_nonexistent_version() {

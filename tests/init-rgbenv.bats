@@ -2,6 +2,14 @@
 
 load _helper
 
+setup_file() {
+	setup_file_common
+}
+
+setup() {
+	setup_common
+}
+
 @test "init rgbenv at ~/.rgbenv" {
 	export XDG_DATA_HOME=""
 	yes | rgbenv
