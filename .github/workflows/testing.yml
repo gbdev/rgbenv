@@ -1,0 +1,29 @@
+name: "Regression testing"
+on:
+  - push
+  - pull_request
+
+jobs:
+  shellcheck:
+    name: Shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          severity: error
+
+  test:
+    name: bats-core tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout rgbenv
+        uses: actions/checkout@v2
+        with:
+          path: rgbenv
+            
+      - name: Run tests
+        run: make test
+        working-directory: rgbenv/
+
