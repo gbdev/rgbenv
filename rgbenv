@@ -96,12 +96,10 @@ help () {
 checkver () {
 	if [ -z $1 ]; then
 		echo "No version number set!"
-		point_to_available_command
-		exit 1
+		point_to_available_command_and_terminate
 	elif [[ ! $1 =~ [[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+(-[A-Za-z0-9_]+)? ]]; then
 		echo "Invalid version number."
-		point_to_available_command
-		exit 1
+		point_to_available_command_and_terminate
 	fi
 }
 
@@ -162,22 +160,26 @@ show_install_instructions () {
 	echo "You can try to install this version by:"
 	echo "    rgbenv install $1"
 }
-point_to_available_command () {
+
+point_to_available_command_and_terminate () {
 	echo
 	echo "To see available versions:"
 	echo "    rgbenv available"
+	exit 1
 }
 
-point_to_available_online () {
+point_to_available_online_and_terminate () {
 	echo
 	echo "Check for installable versions by:"
 	echo "    rgbenv available --online"
+	exit 1
 }
 
-point_to_use () {
+point_to_use_and_terminate () {
 	echo
 	echo "Select a version to use with:"
 	echo "    rgbenv use <version>"
+	exit 1
 }
 
 # --------------- Subcommands -----------------------------------------
@@ -202,6 +204,7 @@ _available () {
 			echo "Then, from that list, install the version you"
 			echo "want using:"
 			echo "    rgbenv install <version>"
+			exit 1
 		else
 			echo "Currently installed versions:"
 			for i in $have_versions; do
@@ -220,7 +223,7 @@ _use () {
 			cat $RGBENV_DEFAULT/version
 		else
 			echo "Use which version?"
-			point_to_available_command
+			point_to_available_command_and_terminate
 		fi
 	else
 		checkver $1;
@@ -249,7 +252,7 @@ _use () {
 		else
 			echo "Version $1 has not been installed yet."
 			show_install_instructions $1
-			point_to_available_command
+			point_to_available_command_and_terminate
 		fi
 	fi
 }
@@ -275,8 +278,7 @@ _install () {
 	local download_link="$RGBDS_DOWNLOAD_BASE$version"
 	if [ -z $version ]; then
 		echo "Which version to install?"
-		point_to_available_online
-		exit 1
+		point_to_available_online_and_terminate
 	fi
 	checkverinstall $version
 	
@@ -292,8 +294,7 @@ _install () {
 	done
 	if [ $got_version -eq 0 ]; then
 		echo "Version $version not found in the releases page."
-		point_to_available_online
-		exit 1
+		point_to_available_online_and_terminate
 	fi
 	
 	# if so, download the tarball and extract it
@@ -325,7 +326,7 @@ _uninstall () {
 	local version=$1
 	if [ -z $version ]; then
 		echo "Which version to uninstall?"
-		point_to_available_command
+		point_to_available_command_and_terminate
 	else
 		checkver $version
 		if [ -d $RGBENV_VERSIONS/$RGBDS_PREFIX$version ]; then
@@ -358,8 +359,7 @@ _exec () {
 		else
 			echo "Version $version is not installed."
 			show_install_instructions $version
-			point_to_available_command
-			exit 1
+			point_to_available_command_and_terminate
 		fi
 	elif [ -f .rgbds-version ]; then
 		local version=$(cat .rgbds-version | tr -d " \t\n\r")
@@ -372,8 +372,7 @@ _exec () {
 		else
 			echo "Version $version is not installed."
 			show_install_instructions $version
-			point_to_available_command
-			exit 1
+			point_to_available_command_and_terminate
 		fi
 	else
 		# when PATH is set properly, this would pretty much be useless
@@ -382,8 +381,7 @@ _exec () {
 			version=$(cat $RGBENV_DEFAULT/version)
 			if [ ! -x $RGBENV_VERSIONS/$RGBDS_PREFIX$version/rgbasm ]; then
 				echo "Version not set."
-				point_to_use
-				exit 1
+				point_to_use_and_terminate
 			else
 				if [ ${#@} -gt 0 ]; then
 					env PATH="$RGBENV_VERSIONS/$RGBDS_PREFIX$version:$PATH" "$@"
@@ -391,8 +389,7 @@ _exec () {
 			fi
 		else
 			echo "Version not set."
-			point_to_use
-			exit 1
+			point_to_use_and_terminate
 		fi
 	fi
 }
