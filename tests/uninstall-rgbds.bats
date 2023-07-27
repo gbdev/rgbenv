@@ -12,7 +12,7 @@ setup() {
 	setup_make_rgbenv
 }
 
-check_use () {
+check_used_version () {
 	rgbasm -V
 }
 
@@ -25,7 +25,7 @@ check_use () {
 	rgbenv use 0.5.1
 	assert [ -x "$RGBENV_TEST_DEFAULT/bin/rgbasm" ]
 	
-	run check_use
+	run check_used_version
 	assert_line_number -1 "rgbasm v0.5.1"
 	
 	rgbenv no-use
