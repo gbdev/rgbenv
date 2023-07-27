@@ -30,7 +30,6 @@ get_old_version() {
 }
 
 @test "fail on using nonexistent version" {
-	skip "Need to implement the necessary exit-codes"
 	run use_nonexistent_version
 	assert_fail
 }

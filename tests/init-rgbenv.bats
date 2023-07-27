@@ -30,14 +30,12 @@ setup() {
 }
 
 @test "if \$XDG_DATA_HOME defined, offer to move ~/.rgbenv there" {
-	skip "Not implemented yet"
-	
 	mkdir $HOME/.rgbenv
 	
 	export XDG_DATA_HOME="$HOME/data"
 	mkdir $XDG_DATA_HOME
 	
-	assert [ ! -d "$XDG_DATA_HOME/rgbenv"]
+	assert [ ! -d "$XDG_DATA_HOME/rgbenv" ]
 	
 	yes | rgbenv # should offer to move the directory there
 	
