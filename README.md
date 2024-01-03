@@ -7,7 +7,7 @@ This is a version manager for [RGBDS](https://github.com/gbdev/rgbds). It is a p
 ## Quickstart (Debian)
 ```sh
 sudo apt install -y libpng-dev pkg-config build-essential bison git curl
-sudo sh -c 'curl https://raw.githubusercontent.com/gbdev/rgbenv/master/rgbenv > /usr/local/bin/rgbenv'
+sudo curl -o /usr/local/bin/rgbenv https://raw.githubusercontent.com/gbdev/rgbenv/master/rgbenv
 sudo chmod +x /usr/local/bin/rgbenv
 yes | rgbenv install 0.7.0
 rgbenv use 0.7.0
