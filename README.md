@@ -12,7 +12,7 @@ sudo curl -o /usr/local/bin/rgbenv https://raw.githubusercontent.com/gbdev/rgben
 sudo chmod +x /usr/local/bin/rgbenv
 yes | rgbenv install 0.7.0
 rgbenv use 0.7.0
-echo 'export PATH=$HOME/.local/share/rgbenv/default/bin:$PATH' >> .bashrc
+echo 'export PATH="$HOME/.local/share/rgbenv/default/bin:$PATH"' >> .bashrc
 source .bashrc
 
 rgbasm -V
