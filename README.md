@@ -5,6 +5,7 @@ This is a version manager for [RGBDS](https://github.com/gbdev/rgbds). It is a p
 \* Bash script, at the moment. Compatibility with other shells is not guaranteed.
 
 ## Quickstart (Debian)
+
 ```sh
 sudo apt install -y libpng-dev pkg-config build-essential bison git curl
 sudo curl -o /usr/local/bin/rgbenv https://raw.githubusercontent.com/gbdev/rgbenv/master/rgbenv
