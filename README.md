@@ -6,17 +6,39 @@ This is a version manager for [RGBDS](https://github.com/gbdev/rgbds). It is a p
 
 ## Quickstart (Debian)
 
+### 1. Get rgbenv
 ```sh
 sudo apt install -y libpng-dev pkg-config build-essential bison git curl
 sudo curl -o /usr/local/bin/rgbenv https://raw.githubusercontent.com/gbdev/rgbenv/master/rgbenv
 sudo chmod +x /usr/local/bin/rgbenv
-yes | rgbenv install 0.7.0
+```
+
+### 2. Install a version and set it as the default
+```sh
+rgbenv install 0.7.0
 rgbenv use 0.7.0
+```
+
+### 3. Use the default version
+```sh
+rgbenv exec rgbasm -V
+```
+(replace `rgbasm -V` with your desired command)
+
+To use it without `rgbenv exec`…
+```sh
 echo 'export PATH="$HOME/.local/share/rgbenv/default/bin:$PATH"' >> .bashrc
 source .bashrc
-
 rgbasm -V
 ```
+
+### 4. Execute with another version
+```sh
+rgbenv install 0.6.1
+rgbenv exec -v 0.6.1 rgbasm -V
+```
+(replace `rgbasm -V` with your desired command)
+
 
 ## What does it do?
 
