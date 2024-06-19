@@ -44,29 +44,29 @@ get_old_version() {
 
 @test "verify correct rgbasm version" {
 	ln -s $RGBENV_VERSION_CACHE/rgbds-0.5.1 $RGBENV_TEST_VERSIONS/rgbds-0.5.1
-	rgbenv use 0.5.1
+	run rgbenv use 0.5.1
 	assert [ -x "$RGBENV_TEST_DEFAULT/bin/rgbasm" ]
 	assert [ "$(rgbasm -V)" = "rgbasm v0.5.1" ]
 }
 
 @test "verify correct rgblink version" {
 	ln -s $RGBENV_VERSION_CACHE/rgbds-0.5.1 $RGBENV_TEST_VERSIONS/rgbds-0.5.1
-	rgbenv use 0.5.1
+	run rgbenv use 0.5.1
 	assert [ -x "$RGBENV_TEST_DEFAULT/bin/rgblink" ]
 	assert [ "$(rgblink -V)" = "rgblink v0.5.1" ]
 }
 
 @test "verify correct rgbgfx version" {
 	ln -s $RGBENV_VERSION_CACHE/rgbds-0.5.1 $RGBENV_TEST_VERSIONS/rgbds-0.5.1
-	rgbenv use 0.5.1
+	run rgbenv use 0.5.1
 	assert [ -x "$RGBENV_TEST_DEFAULT/bin/rgbgfx" ]
 	assert [ "$(rgbgfx -V)" = "rgbgfx v0.5.1" ]
 }
 
 @test "install two RGBDS versions" {
 # ...but redownload versions anyway, just for this:
-	rgbenv install 0.5.1
-	rgbenv install 0.6.1
+	run rgbenv install 0.5.1
+	run rgbenv install 0.6.1
 
 # save 0.6.1 for later
 	mv $RGBENV_TEST_VERSIONS/rgbds-0.6.1 $RGBENV_VERSION_CACHE/rgbds-0.6.1
@@ -112,11 +112,11 @@ compile_v061_051 () {
 	ln -s $RGBENV_VERSION_CACHE/rgbds-0.5.1 $RGBENV_TEST_VERSIONS/rgbds-0.5.1
 	ln -s $RGBENV_VERSION_CACHE/rgbds-0.6.1 $RGBENV_TEST_VERSIONS/rgbds-0.6.1
 	
-	rgbenv use 0.5.1
+	run rgbenv use 0.5.1
 	run compile_v051_051
 	assert_success
 	
-	rgbenv use 0.6.1
+	run rgbenv use 0.6.1
 	run compile_v061_061
 	assert_success
 }
@@ -125,7 +125,7 @@ compile_v061_051 () {
 	ln -s $RGBENV_VERSION_CACHE/rgbds-0.5.1 $RGBENV_TEST_VERSIONS/rgbds-0.5.1
 	ln -s $RGBENV_VERSION_CACHE/rgbds-0.6.1 $RGBENV_TEST_VERSIONS/rgbds-0.6.1
 	
-	rgbenv use 0.5.1
+	run rgbenv use 0.5.1
 	run compile_v061_051
 	assert_fail
 

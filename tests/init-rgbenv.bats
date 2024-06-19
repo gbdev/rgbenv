@@ -12,7 +12,7 @@ setup() {
 
 @test "init rgbenv at ~/.rgbenv" {
 	export XDG_DATA_HOME=""
-	yes | rgbenv
+	set +o pipefail && yes | rgbenv
 	
 	assert [ -d "$HOME/.rgbenv" ]
 	assert [ -d "$HOME/.rgbenv/versions" ]
@@ -22,7 +22,7 @@ setup() {
 @test "init rgbenv at \$XDG_DATA_HOME/rgbenv" {
 	export XDG_DATA_HOME="$HOME/data"
 	mkdir $XDG_DATA_HOME # requires the dir to exist first
-	yes | rgbenv
+	set +o pipefail && yes | rgbenv
 	
 	assert [ -d "$XDG_DATA_HOME/rgbenv" ]
 	assert [ -d "$XDG_DATA_HOME/rgbenv/versions" ]
@@ -37,7 +37,7 @@ setup() {
 	
 	assert [ ! -d "$XDG_DATA_HOME/rgbenv" ]
 	
-	yes | rgbenv # should offer to move the directory there
+	set +o pipefail && yes | rgbenv # should offer to move the directory there
 	
 	assert [ ! -d "$HOME/.rgbenv" ]
 	assert [ -d "$XDG_DATA_HOME/rgbenv" ]
