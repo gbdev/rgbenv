@@ -128,7 +128,7 @@ _remove () {
 	while [ $has_choice -eq 0 ]; do
 		read -p "Remove rgbenv directories? [y/n] " choice
 		case $choice in
-			[Yy]* ) rm -r "$RGBENV_DEFAULT"; rm -r "$RGBENV_VERSIONS"; has_choice=1; break;;
+			[Yy]* ) rm -rfv "$RGBENV_ROOT"; has_choice=1; break;;
 			[Nn]* ) has_choice=1; exit;;
 			* ) echo "Please answer y or n.";;
 		esac
