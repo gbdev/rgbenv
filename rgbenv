@@ -429,13 +429,17 @@ if [ ! -d "$RGBENV_DEFAULT" ]; then
 fi
 
 # Main program
-case $1 in
-	use* ) shift; _use "$1";;
-	no-use* ) shift; _no_use "$1";;
-	install* ) shift; _install "$1";;
-	uninstall* ) shift; _uninstall "$1";;
-	exec* ) shift; _exec "$@";;
-	available* ) shift; _available "$1";;
-	remove*) shift; _remove;;
-	*) if [ ! -z "$1" ]; then echo -e "Unknown command $1.\n"; fi; help;;
-esac
+if [ "$#" -lt 1 ]; then
+	help;
+else
+	case "$1" in
+		use* ) shift; _use "$1";;
+		no-use* ) shift; _no_use;;
+		install* ) shift; _install "$1";;
+		uninstall* ) shift; _uninstall "$1";;
+		exec* ) shift; _exec "$@";;
+		available* ) shift; _available "$1";;
+		remove*) shift; _remove;;
+		*) echo -e "Unknown command $1.\n"; help;;
+	esac
+fi
