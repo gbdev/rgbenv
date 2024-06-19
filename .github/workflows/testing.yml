@@ -23,7 +23,9 @@ jobs:
         with:
           path: rgbenv
             
-      - name: Run tests
-        run: make test
+      - name: Run tests and print lines without coverage
+        run: |
+            docker build -t rgbenv-test -f .github/ci/bashcov.dockerfile .
+            docker run -t --rm rgbenv-test
         working-directory: rgbenv/
 
