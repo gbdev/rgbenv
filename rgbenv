@@ -324,12 +324,15 @@ _install () {
 	# if so, download the tarball and extract it
 	echo "Downloading from $download_link..."
 	tempfile=$(mktemp)
+	trap "rm -f \"${tempfile}\"" ERR
 	curl -L "$download_link" > "$tempfile"
 	dirname=$(tar tzf "$tempfile" | head -1 | cut -f1 -d'/')
 	cd "$RGBENV_VERSIONS"
 	tar xzf "$tempfile"
+	
 	mv "$RGBENV_VERSIONS/$dirname" "$RGBENV_VERSIONS/$RGBDS_PREFIX$version"
-	rm "$tempfile"
+	trap - ERR
+	rm -f "${tempfile}"
 	
 	# then build it
 	echo "Building RGBDS $version..."
