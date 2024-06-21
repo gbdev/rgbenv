@@ -208,7 +208,7 @@ point_to_use_and_terminate () {
 # --------------- Subcommands -----------------------------------------
 
 _available () {
-	if [ "$1" == "--online" ]; then
+	if [ "$#" -gt 0 ] && [ "$1" == "--online" ]; then
 		check_online_versions
 		echo "Installable versions:"
 		for i in $ONLINE_VERSIONS; do
@@ -241,7 +241,7 @@ _available () {
 }
 
 _use () {
-	if [ -z "$1" ]; then
+	if [ "$#" -lt 1 ]; then
 		if [ -f "$RGBENV_DEFAULT/version" ]; then
 			cat "$RGBENV_DEFAULT/version"
 		else
@@ -296,13 +296,14 @@ _no_use () {
 }
 
 _install () {
-	local version=$1
-	local got_version=0
-	local download_link="$RGBDS_DOWNLOAD_BASE$version"
-	if [ -z "$version" ]; then
+	if [ "$#" -lt 1 ]; then
 		echo "Which version to install?"
 		point_to_available_online_and_terminate
 	fi
+	
+	local version=$1
+	local got_version=0
+	
 	checkverinstall "$version"
 	
 	check_online_versions
@@ -346,11 +347,12 @@ _install () {
 }
 
 _uninstall () {
+	if [ "$#" -lt 1 ]; then
+		echo "Which version to install?"
+		point_to_available_online_and_terminate
+	fi
+	
 	local version=$1
-	if [ -z "$version" ]; then
-		echo "Which version to uninstall?"
-		point_to_available_command_and_terminate
-	else
 		checkver "$version"
 		if [ -d "$RGBENV_VERSIONS/$RGBDS_PREFIX$version" ]; then
 			rm -r "${RGBENV_VERSIONS:?}/${RGBDS_PREFIX:?}${version:?}"
@@ -365,7 +367,6 @@ _uninstall () {
 			echo "Version $1 uninstalled."
 			
 		fi
-	fi
 }
 
 _exec () {
@@ -433,12 +434,12 @@ if [ "$#" -lt 1 ]; then
 	help;
 else
 	case "$1" in
-		use* ) shift; _use "$1";;
+		use* ) shift; _use "$@";;
 		no-use* ) shift; _no_use;;
-		install* ) shift; _install "$1";;
-		uninstall* ) shift; _uninstall "$1";;
+		install* ) shift; _install "$@";;
+		uninstall* ) shift; _uninstall "$@";;
 		exec* ) shift; _exec "$@";;
-		available* ) shift; _available "$1";;
+		available* ) shift; _available "$@";;
 		remove*) shift; _remove;;
 		*) echo -e "Unknown command $1.\n"; help;;
 	esac
