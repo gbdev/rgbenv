@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 # SPDX-License-Identifier: MIT
 #
@@ -21,6 +21,30 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
+# Prevent boundless recursion
+if [ -z "${RGBENV_REEXEC_COUNT}" ]; then
+	RGBENV_REEXEC_COUNT=0
+else
+	RGBENV_REEXEC_COUNT=$(expr ${RGBENV_REEXEC_COUNT} + 1)
+fi
+export RGBENV_REEXEC_COUNT
+
+if (command -v bash 2>&1 > /dev/null); then
+	if [ "${SHELL}" = "$(command -v bash)" ]; then
+		if [ "${RGBENV_REEXEC_COUNT}" -gt 1 ]; then
+			exit
+		fi
+	else
+		exec /usr/bin/env bash "${0}" "${@}"
+	fi
+else
+	echo "Sorry, rgbenv requires bash."
+	exit 1
+fi
+
+
+set -euo pipefail
 
 # --------------- Constant defines -------------------------------------------------
 
