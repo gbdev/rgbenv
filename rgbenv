@@ -22,7 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# --------------- Variables -------------------------------------------------
+# --------------- Constant defines -------------------------------------------------
 
 RGBDS_GIT="https://github.com/gbdev/rgbds"
 
@@ -30,7 +30,7 @@ RGBDS_GIT="https://github.com/gbdev/rgbds"
 RGBDS_DOWNLOAD_BASE="https://api.github.com/repos/gbdev/rgbds/tarball/v"
 RGBDS_PREFIX="rgbds-"
 
-# --------------- Var defines -------------------------------------------------
+# --------------- Conditional defines -------------------------------------------------
 
 # Set up XDG standard directories (Linux, etc.)
 RGBENV_ROOT_SUFFIX="rgbenv"
