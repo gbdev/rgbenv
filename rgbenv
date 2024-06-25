@@ -27,7 +27,7 @@
 RGBDS_GIT="https://github.com/gbdev/rgbds"
 
 # The version number is directly appended after these variables
-RGBDS_DOWNLOAD_BASE="https://api.github.com/repos/gbdev/rgbds/tarball/v"
+RGBDS_DOWNLOAD_BASE="https://api.github.com/repos/gbdev/rgbds/tarball/"
 RGBDS_PREFIX="rgbds-"
 
 # --------------- Conditional defines -------------------------------------------------
@@ -303,6 +303,12 @@ _install () {
 	
 	local version=$1
 	local got_version=0
+	local download_link
+	if [[ "$version" =~ ^[0-9] ]]; then
+		download_link="${RGBDS_DOWNLOAD_BASE}v${version}"
+	else
+		download_link="${RGBDS_DOWNLOAD_BASE}${version}"
+	fi
 	
 	checkverinstall "$version"
 	
