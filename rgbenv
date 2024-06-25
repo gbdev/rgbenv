@@ -22,27 +22,26 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# Prevent boundless recursion
-if [ -z "${RGBENV_REEXEC_COUNT}" ]; then
-	RGBENV_REEXEC_COUNT=0
-else
-	RGBENV_REEXEC_COUNT=$(expr ${RGBENV_REEXEC_COUNT} + 1)
-fi
-export RGBENV_REEXEC_COUNT
-
-if (command -v bash 2>&1 > /dev/null); then
-	if [ "${SHELL}" = "$(command -v bash)" ]; then
-		if [ "${RGBENV_REEXEC_COUNT}" -gt 1 ]; then
-			exit
-		fi
-	else
-		exec /usr/bin/env bash "${0}" "${@}"
-	fi
-else
+if ! (command -v bash 2>&1 > /dev/null); then
 	echo "Sorry, rgbenv requires bash."
 	exit 1
 fi
 
+if [ "${SHELL}" != "$(command -v bash)" ]; then
+	# Prevent boundless recursion
+	if [ -z "${REEXEC_COUNT}" ]; then
+		RGBENV_REEXEC_COUNT=0
+	else
+		RGBENV_REEXEC_COUNT=$(expr ${RGBENV_REEXEC_COUNT} + 1)
+	fi
+	export RGBENV_REEXEC_COUNT
+	
+	if [ "${RGBENV_REEXEC_COUNT}" -gt 1 ]; then
+		exit
+	fi
+	
+	exec /usr/bin/env bash "${0}" "${@}"
+fi
 
 set -euo pipefail
 
