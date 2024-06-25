@@ -9,7 +9,7 @@ This is a version manager for [RGBDS](https://github.com/gbdev/rgbds). It is a p
 ### 1. Get rgbenv
 ```sh
 sudo apt install -y libpng-dev pkg-config build-essential bison git curl
-sudo curl -o /usr/local/bin/rgbenv https://raw.githubusercontent.com/gbdev/rgbenv/master/rgbenv
+sudo curl -Lo /usr/local/bin/rgbenv https://github.com/gbdev/rgbenv/raw/v0.1.3/rgbenv
 sudo chmod +x /usr/local/bin/rgbenv
 ```
 
@@ -99,7 +99,7 @@ $ CC=egcc CXX=eg++ rgbenv install $YOUR_DESIRED_VERSION</code></pre></li>
 
 <ol>
 <li>Install whatever dependencies it needs, through the above section.</li>
-<li>Download the rgbenv script, and place it in <code>/usr/local/bin/</code> (or any directory listed when you run <code>echo $PATH</code>) The fastest way is through: <pre><code># curl https://raw.githubusercontent.com/gbdev/rgbenv/master/rgbenv > /usr/local/bin/rgbenv</code></pre></li>
+<li>Download the rgbenv script, and place it in <code>/usr/local/bin/</code> (or any directory listed when you run <code>echo $PATH</code>) The fastest way is through: <pre><code># curl -Lo /usr/local/bin/rgbenv https://github.com/gbdev/rgbenv/raw/v0.1.3/rgbenv</code></pre></li>
 <li>Ensure the script is executable: <pre><code># chmod +x /usr/local/bin/rgbenv
 </code></pre>(replace <code>/usr/local/bin/rgbenv</code> with where you put the rgbenv script)</li>
 <li>Install the version you want, say 0.6.0:<pre><code>$ rgbenv install 0.6.0
